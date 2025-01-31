@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import NewsCard from './components/NewsCard';
 import { PopularNewsCard } from './components/PopularNewsCard';
 import { RecommendedNewsCard } from './components/RecommendedNewsCard';
+import { SearchBar } from './components/SearchBar';
 import { PopularNews, RecommendedNews } from './types';
 
 const sources: { [key: string]: string[] } = {
@@ -130,10 +131,16 @@ export default function NewsPage() {
           </section>
 
           <section className="mt-10">
-            <h2 id="recommended-news" className="flex gap-4 self-start py-3 text-2xl font-bold leading-snug text-black">
-              <div className="flex shrink-0 w-1 bg-sky-500 h-[34px] rounded-[200px]" />
-              Rekomendasi Untuk Anda
-            </h2>
+            <div className="flex justify-between items-center py-3">
+              <h2 id="recommended-news" className="flex gap-4 self-start text-2xl font-bold leading-snug text-black">
+                <div className="flex shrink-0 w-1 bg-sky-500 h-[34px] rounded-[200px]" />
+                Rekomendasi Untuk Anda
+              </h2>
+              <div className="flex justify-end max-md:w-auto">
+                <SearchBar />
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-4 gap-x-4 gap-y-32 mt-4">
               {currentRecommendedNews.length > 0 ? currentRecommendedNews.map((news) => (
                 <RecommendedNewsCard 
@@ -145,6 +152,7 @@ export default function NewsPage() {
                 />
               )) : <p>No recommended news available.</p>}
             </div>
+
             <div className="mt-100">
               <div className="flex justify-between items-center mt-100 gap-5">
                 <div className="flex items-center gap-4">

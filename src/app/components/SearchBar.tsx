@@ -3,8 +3,8 @@ import Image from 'next/image';
 
 export function SearchBar() {
   return (
-    <form className="flex flex-col text-base leading-7 text-gray-400 min-h-[62px] min-w-[240px] w-[492px] max-md:max-w-full">
-      <div className="flex overflow-hidden flex-wrap flex-1 gap-2.5 items-center px-4 py-3 bg-white rounded-lg border border-solid border-neutral-200 size-full max-md:max-w-full">
+    <form className="flex flex-col text-base leading-7 text-gray-400 h-[34px] min-w-[240px] w-[492px] max-md:max-w-full">
+      <div className="flex overflow-hidden flex-wrap flex-1 gap-2.5 items-center px-4 py-1 bg-white rounded-lg border border-solid border-neutral-200 size-full max-md:max-w-full">
         <label htmlFor="searchInput" className="sr-only">Search</label>
         <input
           type="search"
