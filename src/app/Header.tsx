@@ -9,11 +9,7 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsSticky(true);
-      } else {
-        setIsSticky(false);
-      }
+      setIsSticky(window.scrollY > 50);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -29,14 +25,16 @@ const Header: React.FC = () => {
       } fixed top-0 left-0 w-full z-10 font-sans font-medium`}
     >
       <div className="flex items-center space-x-4">
-        <img 
-          src={isSticky ? "/icon-white.svg" : "/icon.svg"} 
-          alt="Logo" 
-          className="w-10 h-10" 
-        />
-        <div className={`text-2xl font-bold ${isSticky ? 'text-white' : 'text-black'}`}>
+        <Link href="/">
+          <img 
+            src={isSticky ? "/icon-white.svg" : "/icon.svg"} 
+            alt="Logo" 
+            className="w-10 h-10 cursor-pointer"
+          />
+        </Link>
+        <Link href="/" className={`text-2xl font-bold ${isSticky ? 'text-white' : 'text-black'}`}>
           Berita Kini
-        </div>
+        </Link>
       </div>
 
       <button
@@ -52,7 +50,7 @@ const Header: React.FC = () => {
         } absolute lg:relative top-0 left-0 w-full bg-blue-500 lg:bg-transparent lg:w-auto p-4 lg:p-0`}
       >
         <Link
-          href="#"
+          href="/"
           className={`${
             isSticky ? 'text-white' : 'text-black'
           } font-medium hover:text-blue-500 transition-colors duration-300 block lg:inline-block py-2 lg:py-0`}
