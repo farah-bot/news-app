@@ -1,4 +1,6 @@
+"use client";
 import "./globals.css";
+import React, { useEffect } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -6,15 +8,16 @@ import { Geist, Geist_Mono } from "next/font/google";
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
-export const metadata = {
-  title: "Berita Kini",
-  description: "Website untuk berita terbaru",
-  icons: {
-    icon: "/icon.svg",
-  },
-};
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    const isDarkMode = localStorage.getItem("theme") === "dark";
+    if (isDarkMode) {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+  }, []);
+
   return (
     <html lang="id">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>

@@ -95,7 +95,7 @@ export default function NewsPage() {
 
   return (
     <main className="flex flex-col p-20 max-md:px-5">
-      <section className="flex flex-col justify-center w-full bg-white rounded-xl max-md:max-w-full">
+      <section className="flex flex-col justify-center w-full rounded-xl max-md:max-w-full">
         <NewsCard
           id={1}
           headline="Headline"
@@ -115,7 +115,7 @@ export default function NewsPage() {
       ) : (
         <>
           <section className="mt-10">
-            <h2 id="popular-news" className="flex gap-4 self-start py-3 text-2xl font-bold leading-snug text-black">
+            <h2 id="popular-news" className="flex gap-4 self-start py-3 text-2xl font-bold leading-snug text-black dark:text-white">
               <div className="flex shrink-0 w-1 bg-sky-500 h-[34px] rounded-[200px]" />
               Berita Terpopuler
             </h2>
@@ -132,7 +132,7 @@ export default function NewsPage() {
 
           <section className="mt-10">
             <div className="flex justify-between items-center py-3">
-              <h2 id="recommended-news" className="flex gap-4 self-start text-2xl font-bold leading-snug text-black">
+              <h2 id="recommended-news" className="flex gap-4 self-start text-2xl font-bold leading-snug text-black dark:text-white">
                 <div className="flex shrink-0 w-1 bg-sky-500 h-[34px] rounded-[200px]" />
                 Rekomendasi Untuk Anda
               </h2>
