@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -14,8 +15,12 @@
   }
 }
 
+* {
+  font-family: 'Nunito Sans', sans-serif;
+}
+
 body {
+  padding: 50px;
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
 }
