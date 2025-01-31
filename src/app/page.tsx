@@ -1,101 +1,179 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useState, useEffect } from 'react';
+import NewsCard from './components/NewsCard';
+import { PopularNewsCard } from './components/PopularNewsCard';
+import { RecommendedNewsCard } from './components/RecommendedNewsCard';
+import { PopularNews, RecommendedNews } from './types';
+
+const sources: { [key: string]: string[] } = {
+  antara: ['terbaru', 'politik', 'hukum', 'ekonomi', 'bola', 'olahraga', 'humaniora', 'lifestyle', 'hiburan', 'dunia', 'tekno', 'otomotif'],
+  cnbc: ['terbaru', 'investment', 'news', 'market', 'entrepreneur', 'syariah', 'tech', 'lifestyle', 'opini', 'profil'],
+  cnn: ['terbaru', 'nasional', 'internasional', 'ekonomi', 'olahraga', 'teknologi', 'hiburan', 'gayahidup'],
+  jpnn: ['terbaru'],
+  kumparan: ['terbaru'],
+  merdeka: ['terbaru', 'jakarta', 'dunia', 'gaya', 'olahraga', 'teknologi', 'otomotif', 'khas', 'sehat', 'jateng'],
+  okezone: ['terbaru', 'celebrity', 'sports', 'otomotif', 'economy', 'techno', 'lifestyle', 'bola'],
+  republika: ['terbaru', 'news', 'daerah', 'khazanah', 'islam', 'internasional', 'bola', 'leisure'],
+  sindonews: ['terbaru', 'nasional', 'metro', 'ekbis', 'international', 'daerah', 'sports', 'otomotif', 'tekno', 'sains', 'edukasi', 'lifestyle', 'kalam'],
+  suara: ['terbaru', 'bisnis', 'bola', 'lifestyle', 'entertainment', 'otomotif', 'tekno', 'health'],
+  tempo: ['nasional', 'bisnis', 'metro', 'dunia', 'bola', 'cantik', 'tekno', 'otomotif', 'seleb', 'gaya', 'travel', 'difabel', 'creativelab', 'inforial', 'event'],
+  tribun: ['terbaru', 'bisnis', 'superskor', 'sport', 'seleb', 'lifestyle', 'travel', 'parapuan', 'otomotif', 'techno', 'kesehatan'],
+};
+
+const shuffleArray = (array: any[]) => {
+  const shuffledArray = [...array];
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+  }
+  return shuffledArray;
+};
+
+export default function NewsPage() {
+  const [popularNews, setPopularNews] = useState<PopularNews[]>([]);
+  const [recommendedNews, setRecommendedNews] = useState<RecommendedNews[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const newsPerPage = 8;
+
+  const fetchNewsFromAllSources = async () => {
+    setLoading(true);
+    try {
+      const allNews: PopularNews[] = [];
+      const allRecommended: RecommendedNews[] = [];
+
+      const fetchPromises = Object.entries(sources).map(([source, categories]) => {
+        return categories.map((category) => {
+          const apiUrl = `https://api-berita-indonesia.vercel.app/${source}/${category}/`;
+          return fetch(apiUrl).then(async (response) => {
+            const data = await response.json();
+            if (data?.data?.posts) {
+              allNews.push(...data.data.posts);
+              allRecommended.push(...data.data.posts);
+            } else {
+              console.error(`No data for ${source} - ${category}`);
+            }
+          });
+        });
+      });
+
+      await Promise.all(fetchPromises.flat());
+
+      setPopularNews(allNews);
+      setRecommendedNews(shuffleArray(allRecommended));
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchNewsFromAllSources();
+  }, []);
+
+  const totalPages = Math.ceil(recommendedNews.length / newsPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(prevPage => prevPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(prevPage => prevPage - 1);
+    }
+  };
+
+  const currentRecommendedNews = recommendedNews.slice(
+    (currentPage - 1) * newsPerPage,
+    currentPage * newsPerPage
+  );
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
+    <main className="flex flex-col p-20 max-md:px-5">
+      <section className="flex flex-col justify-center w-full bg-white rounded-xl max-md:max-w-full">
+        <NewsCard
+          id={1}
+          headline="Headline"
+          category="News"
+          date="22 Januari 2024"
+          image="/headline.png"
+          description="Respons PSSI Soal Opsi Pindah dari GBK jika Lolos Babak 3 Kualifikasi"
         />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+      </section>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      {loading ? (
+        <div className="flex flex-col gap-4">
+          <div className="bg-gray-300 animate-pulse h-48 rounded-xl"></div>
+          <div className="bg-gray-300 animate-pulse h-48 rounded-xl"></div>
+          <div className="bg-gray-300 animate-pulse h-48 rounded-xl"></div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      ) : (
+        <>
+          <section className="mt-10">
+            <h2 id="popular-news" className="flex gap-4 self-start py-3 text-2xl font-bold leading-snug text-black">
+              <div className="flex shrink-0 w-1 bg-sky-500 h-[34px] rounded-[200px]" />
+              Berita Terpopuler
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+              {popularNews.length > 0 ? popularNews.slice(0, 3).map((news, index) => (
+                <PopularNewsCard 
+                  key={news.id} 
+                  {...news} 
+                  number={index + 1}
+                />
+              )) : <p>No popular news available.</p>}
+            </div>
+          </section>
+
+          <section className="mt-10">
+            <h2 id="recommended-news" className="flex gap-4 self-start py-3 text-2xl font-bold leading-snug text-black">
+              <div className="flex shrink-0 w-1 bg-sky-500 h-[34px] rounded-[200px]" />
+              Rekomendasi Untuk Anda
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-x-4 gap-y-32 mt-4">
+              {currentRecommendedNews.length > 0 ? currentRecommendedNews.map((news) => (
+                <RecommendedNewsCard 
+                  key={news.link} 
+                  link={news.link} 
+                  title={news.title} 
+                  thumbnail={news.thumbnail} 
+                  pubDate={news.pubDate} 
+                />
+              )) : <p>No recommended news available.</p>}
+            </div>
+            <div className="mt-100">
+              <div className="flex justify-between items-center mt-100 gap-5">
+                <div className="flex items-center gap-4">
+                  <span className="text-gray-500 text-lg font-medium">
+                    Showing {(currentPage - 1) * 8 + 1} to {Math.min(currentPage * 8, recommendedNews.length)} of {recommendedNews.length} results
+                  </span>
+                </div>
+
+                <div className="flex gap-4">
+                  <button
+                    onClick={handlePrevPage}
+                    className="px-4 py-2 bg-blue-500 text-white rounded-md disabled:opacity-50"
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </button>
+                  <button
+                    onClick={handleNextPage}
+                    className="px-4 py-2 bg-blue-500 text-white rounded-md disabled:opacity-50"
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+        </>
+      )}
+    </main>
   );
 }
