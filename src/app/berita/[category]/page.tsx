@@ -78,7 +78,7 @@ export default function CategoryPage() {
 
   return (
     <div className="p-8">
-      <h1 className="text-5xl font-extrabold mb-8 text-center capitalize">{category}</h1>
+      <h1 className="text-5xl font-extrabold mb-8 text-center capitalize mt-10">{category}</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-32 mt-4">
         {recommendations.map((news) => (
