@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { FaHome } from 'react-icons/fa';
 import Link from 'next/link';
+import { formatDate } from "../utils/dateFormatter";
 
 interface NewsData {
   title: string;
@@ -99,7 +100,7 @@ const DetailPageContent = () => {
         <h1 className="text-4xl font-bold">{newsData.title}</h1>
 
         {newsData.pubDate && (
-          <p className="text-sm text-gray-500 mt-6">{newsData.pubDate}</p>
+          <p className="text-sm text-gray-500 mt-6">{formatDate(newsData.pubDate)}</p>
         )}
 
         {newsData.category && (

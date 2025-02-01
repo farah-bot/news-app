@@ -11,6 +11,7 @@ interface PopularNews extends NewsArticle {
   title: string;
   description: string;
   thumbnail: string;
+  pubDate: string;
 }
 
 interface RecommendedNews extends NewsArticle {

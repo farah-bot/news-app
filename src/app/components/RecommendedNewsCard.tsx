@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { formatDate } from "../utils/dateFormatter";
 
 interface RecommendedNewsCardProps {
   link: string;
@@ -35,8 +36,11 @@ export const RecommendedNewsCard: React.FC<RecommendedNewsCardProps> = ({
         >
           {title}
         </Link>
-        <div className="text-blue-500 text-sm mt-1 font-semibold">Nasional</div>
-        <span className="text-gray-500 text-sm">{pubDate}</span>
+        <div className="flex items-center gap-2 mt-1">
+          <div className="text-blue-500 text-sm font-semibold">Nasional</div>
+          <span className="text-gray-500 text-sm">•</span> 
+          <span className="text-gray-500 text-sm">{formatDate(pubDate)}</span>
+        </div>
       </div>
     </div>
   );
