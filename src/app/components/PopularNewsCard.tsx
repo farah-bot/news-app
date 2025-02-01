@@ -20,8 +20,8 @@ export const PopularNewsCard: React.FC<PopularNewsCardProps> = ({ link, title, t
         <Image
           src={thumbnail}
           alt={title}
-          width={24} 
-          height={24}
+          width={94} 
+          height={94}
           className="object-cover rounded-md mr-4"
         />
         <div>

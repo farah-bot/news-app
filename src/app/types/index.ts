@@ -1,10 +1,9 @@
 interface NewsArticle {
-  id: number;
-  headline: string;
-  category: string;
-  date: string;
-  image: string;
-  description?: string;
+  link: string;
+  title: string;
+  description: string;
+  thumbnail: string;
+  pubDate: string;
 }
 
 interface PopularNews extends NewsArticle {

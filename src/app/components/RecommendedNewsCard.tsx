@@ -1,10 +1,11 @@
-import Link from "next/link";
-import Image from "next/image";
+import Link from 'next/link';
+import Image from 'next/image';
 
 interface RecommendedNewsCardProps {
   link: string;
   title: string;
   thumbnail: string;
+  description: string;
   pubDate: string;
 }
 
@@ -12,6 +13,7 @@ export const RecommendedNewsCard: React.FC<RecommendedNewsCardProps> = ({
   link,
   title,
   thumbnail,
+  description,
   pubDate,
 }) => {
   return (
@@ -22,10 +24,15 @@ export const RecommendedNewsCard: React.FC<RecommendedNewsCardProps> = ({
         layout="responsive"
         width={100}
         height={75}
-        className="object-cover rounded-md"
+        className="w-full h-auto object-cover rounded-md"
       />
       <div className="flex flex-col gap-3 justify-between h-full">
-        <Link href={`/detail?link=${encodeURIComponent(link)}`} className="text-base font-semibold line-clamp-3 hover:underline">
+        <Link
+          href={`/detail?link=${encodeURIComponent(link)}&title=${encodeURIComponent(
+            title
+          )}&thumbnail=${encodeURIComponent(thumbnail)}&description=${encodeURIComponent(description)}`}
+          className="text-base font-semibold line-clamp-3 hover:underline"
+        >
           {title}
         </Link>
         <div className="text-blue-500 text-sm mt-1 font-semibold">Nasional</div>

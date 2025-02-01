@@ -1,58 +1,80 @@
-"use client";
+'use client';
 
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState, Suspense } from "react";
-import Image from "next/image";
-
-const Loading = () => <div>Loading...</div>;
+import { useSearchParams } from 'next/navigation';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
 const DetailPage = () => {
   const searchParams = useSearchParams();
-  const link = searchParams.get("link");
-  const [article, setArticle] = useState<any>(null);
+
+  const titleParam = searchParams.get('title');
+  const thumbnailParam = searchParams.get('thumbnail');
+  const descriptionParam = searchParams.get('description');
+  const linkParam = searchParams.get('link');
+
+  const [newsData, setNewsData] = useState<{
+    title: string;
+    thumbnail: string;
+    description: string;
+    pubDate?: string;
+  } | null>(null);
 
   useEffect(() => {
-    if (link) {
-      const fetchArticle = async () => {
+    if (titleParam && thumbnailParam && descriptionParam) {
+      setNewsData({
+        title: titleParam,
+        thumbnail: thumbnailParam,
+        description: descriptionParam,
+      });
+    } else if (linkParam) {
+      const fetchData = async () => {
         try {
-          const response = await fetch(link);
+          const response = await fetch(`/api/news?link=${encodeURIComponent(linkParam)}`);
+          if (!response.ok) {
+            throw new Error('Failed to fetch data');
+          }
           const data = await response.json();
-          setArticle(data);
+          setNewsData(data);
         } catch (error) {
-          console.error("Failed to fetch article:", error);
+          console.error('Error fetching data:', error);
         }
       };
 
-      fetchArticle();
+      fetchData();
     }
-  }, [link]);
+  }, [titleParam, thumbnailParam, descriptionParam, linkParam]);
 
-  if (!article) {
+  if (!newsData) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-semibold">{article.title}</h1>
-      <Image
-        src={article.thumbnail}
-        alt={article.title}
-        width={1000} 
-        height={500} 
-        className="object-cover mt-4 rounded-md"
-      />
-      <div className="mt-4 text-lg">{article.description}</div>
-      <div className="text-sm text-gray-500 mt-2">{article.pubDate}</div>
+    <div className="p-4">
+      <h1 className="text-2xl font-bold">{newsData.title}</h1>
+      
+      {newsData.pubDate && (
+        <p className="text-sm text-gray-500">{newsData.pubDate}</p>
+      )}
+
+
+      <div className="mt-4">
+        {newsData.thumbnail ? (
+          <div className="relative w-[400px] h-[267px]">
+            <Image
+              src={newsData.thumbnail}
+              alt={newsData.title || 'News Thumbnail'}
+              className="object-cover rounded-md"
+              fill
+            />
+          </div>
+        ) : (
+          <div>No image available</div>
+        )}
+      </div>
+
+      <div className="mt-4">{newsData.description}</div>
     </div>
   );
 };
 
-const SuspenseWrapper = () => {
-  return (
-    <Suspense fallback={<Loading />}>
-      <DetailPage />
-    </Suspense>
-  );
-};
-
-export default SuspenseWrapper;
+export default DetailPage;

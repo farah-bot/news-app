@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  images: {
+    domains: ['img.antaranews.com', 'akcdn.detik.net.id'],
+  },
 };
 
 export default nextConfig;

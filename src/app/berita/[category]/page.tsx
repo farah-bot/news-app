@@ -9,6 +9,7 @@ interface NewsItem {
   title: string;
   thumbnail: string;
   pubDate: string;
+  description: string;
 }
 
 const API_PATHS = {
@@ -89,6 +90,7 @@ export default function CategoryPage() {
             title={news.title}
             thumbnail={news.thumbnail}
             pubDate={news.pubDate}
+            description={news.description}
           />
         ))}
       </div>

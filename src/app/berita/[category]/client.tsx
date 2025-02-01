@@ -9,6 +9,7 @@ interface NewsItem {
   title: string;
   thumbnail: string;
   pubDate: string;
+  description: string;
 }
 
 const API_PATHS = {
@@ -33,7 +34,7 @@ export default function CategoryPage() {
   }, [category]);
 
   const fetchRecommendations = async (category: Category) => {
-    const apiUrl = API_PATHS[category]; // Now TypeScript knows this is safe
+    const apiUrl = API_PATHS[category];
     if (!apiUrl) return;
 
     try {
@@ -67,6 +68,7 @@ export default function CategoryPage() {
             title={news.title}
             thumbnail={news.thumbnail}
             pubDate={news.pubDate}
+            description={news.description}
           />
         ))}
       </div>

@@ -1,26 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Slider from 'react-slick';
 import NewsCard from './components/NewsCard';
 import { PopularNewsCard } from './components/PopularNewsCard';
 import { RecommendedNewsCard } from './components/RecommendedNewsCard';
 import { SearchBar } from './components/SearchBar';
-import { PopularNews, RecommendedNews } from './types';
-
-const sources: { [key: string]: string[] } = {
-  antara: ['terbaru', 'politik', 'hukum', 'ekonomi', 'bola', 'olahraga', 'humaniora', 'lifestyle', 'hiburan', 'dunia', 'tekno', 'otomotif'],
-  cnbc: ['terbaru', 'investment', 'news', 'market', 'entrepreneur', 'syariah', 'tech', 'lifestyle', 'opini', 'profil'],
-  cnn: ['terbaru', 'nasional', 'internasional', 'ekonomi', 'olahraga', 'teknologi', 'hiburan', 'gayahidup'],
-  jpnn: ['terbaru'],
-  kumparan: ['terbaru'],
-  merdeka: ['terbaru', 'jakarta', 'dunia', 'gaya', 'olahraga', 'teknologi', 'otomotif', 'khas', 'sehat', 'jateng'],
-  okezone: ['terbaru', 'celebrity', 'sports', 'otomotif', 'economy', 'techno', 'lifestyle', 'bola'],
-  republika: ['terbaru', 'news', 'daerah', 'khazanah', 'islam', 'internasional', 'bola', 'leisure'],
-  sindonews: ['terbaru', 'nasional', 'metro', 'ekbis', 'international', 'daerah', 'sports', 'otomotif', 'tekno', 'sains', 'edukasi', 'lifestyle', 'kalam'],
-  suara: ['terbaru', 'bisnis', 'bola', 'lifestyle', 'entertainment', 'otomotif', 'tekno', 'health'],
-  tempo: ['nasional', 'bisnis', 'metro', 'dunia', 'bola', 'cantik', 'tekno', 'otomotif', 'seleb', 'gaya', 'travel', 'difabel', 'creativelab', 'inforial', 'event'],
-  tribun: ['terbaru', 'bisnis', 'superskor', 'sport', 'seleb', 'lifestyle', 'travel', 'parapuan', 'otomotif', 'techno', 'kesehatan'],
-};
+import { fetchAntaraNews } from './utils/api';
+import AdsCard from './components/AdsCard';
 
 const shuffleArray = (array: any[]) => {
   const shuffledArray = [...array];
@@ -32,46 +19,30 @@ const shuffleArray = (array: any[]) => {
 };
 
 export default function NewsPage() {
-  const [popularNews, setPopularNews] = useState<PopularNews[]>([]);
-  const [recommendedNews, setRecommendedNews] = useState<RecommendedNews[]>([]);
+  const [popularNews, setPopularNews] = useState<any[]>([]);
+  const [recommendedNews, setRecommendedNews] = useState<any[]>([]); 
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const newsPerPage = 8;
 
-  const fetchNewsFromAllSources = async () => {
-    setLoading(true);
-    try {
-      const allNews: PopularNews[] = [];
-      const allRecommended: RecommendedNews[] = [];
-
-      const fetchPromises = Object.entries(sources).map(([source, categories]) => {
-        return categories.map((category) => {
-          const apiUrl = `https://api-berita-indonesia.vercel.app/${source}/${category}/`;
-          return fetch(apiUrl).then(async (response) => {
-            const data = await response.json();
-            if (data?.data?.posts) {
-              allNews.push(...data.data.posts);
-              allRecommended.push(...data.data.posts);
-            } else {
-              console.error(`No data for ${source} - ${category}`);
-            }
-          });
-        });
-      });
-
-      await Promise.all(fetchPromises.flat());
-
-      setPopularNews(allNews);
-      setRecommendedNews(shuffleArray(allRecommended));
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchNewsFromAllSources();
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const { popularNews, recommendedNews } = await fetchAntaraNews();
+        setPopularNews(popularNews);
+        setRecommendedNews(shuffleArray(recommendedNews));
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError('Failed to fetch news. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const totalPages = Math.ceil(recommendedNews.length / newsPerPage);
@@ -93,28 +64,58 @@ export default function NewsPage() {
     currentPage * newsPerPage
   );
 
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+  };
+
+  const adsSliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+  };
+
   return (
-    <main className="flex flex-col p-20 max-md:px-5">
+    <main className="flex flex-col items-center justify-center p-20 max-md:px-5">
       <section className="flex flex-col justify-center w-full rounded-xl max-md:max-w-full">
-        <NewsCard
-          id={1}
-          headline="Headline"
-          category="News"
-          date="22 Januari 2024"
-          image="/headline.png"
-          description="Respons PSSI Soal Opsi Pindah dari GBK jika Lolos Babak 3 Kualifikasi"
-        />
+        {popularNews.length > 0 ? (
+          <Slider {...sliderSettings}>
+            {popularNews.slice(0, 3).map((news, index) => (
+              <NewsCard
+                key={news.id || index}
+                link={news.link}
+                title={news.title}
+                description={news.description}
+                thumbnail={news.thumbnail}
+                pubDate={news.pubDate}
+              />
+            ))}
+          </Slider>
+        ) : (
+          <p></p>
+        )}
       </section>
 
       {loading ? (
-        <div className="flex flex-col gap-4">
-          <div className="bg-gray-300 animate-pulse h-48 rounded-xl"></div>
-          <div className="bg-gray-300 animate-pulse h-48 rounded-xl"></div>
-          <div className="bg-gray-300 animate-pulse h-48 rounded-xl"></div>
+        <div className="flex justify-center items-center">
+          <div className="loader"></div>
+        </div>
+      ) : error ? (
+        <div className="bg-red-100 text-red-600 p-4 rounded-md text-center">
+          {error}
         </div>
       ) : (
         <>
-          <section className="mt-10">
+          <section className="mt-10 w-full max-w-screen-lg mx-auto">
             <h2 id="popular-news" className="flex gap-4 self-start py-3 text-2xl font-bold leading-snug text-black dark:text-white">
               <div className="flex shrink-0 w-1 bg-sky-500 h-[34px] rounded-[200px]" />
               Berita Terpopuler
@@ -122,7 +123,7 @@ export default function NewsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
               {popularNews.length > 0 ? popularNews.slice(0, 3).map((news, index) => (
                 <PopularNewsCard 
-                  key={news.id} 
+                  key={news.id || index}  
                   {...news} 
                   number={index + 1}
                 />
@@ -130,7 +131,7 @@ export default function NewsPage() {
             </div>
           </section>
 
-          <section className="mt-10">
+          <section className="mt-10 w-full max-w-screen-lg mx-auto">
             <div className="flex justify-between items-center py-3">
               <h2 id="recommended-news" className="flex gap-4 self-start text-2xl font-bold leading-snug text-black dark:text-white">
                 <div className="flex shrink-0 w-1 bg-sky-500 h-[34px] rounded-[200px]" />
@@ -142,19 +143,20 @@ export default function NewsPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-x-4 gap-y-32 mt-4">
-              {currentRecommendedNews.length > 0 ? currentRecommendedNews.map((news) => (
+              {currentRecommendedNews.length > 0 ? currentRecommendedNews.map((news, index) => (
                 <RecommendedNewsCard 
-                  key={news.link}
+                  key={news.link || index} 
                   link={news.link}
                   title={news.title}
                   thumbnail={news.thumbnail}
                   pubDate={news.pubDate}
+                  description={news.description}
                 />
               )) : <p>No recommended news available.</p>}
             </div>
 
-            <div className="mt-100">
-              <div className="flex justify-between items-center mt-100 gap-5">
+            <div className="mt-10">
+              <div className="flex justify-between items-center mt-10 gap-5">
                 <div className="flex items-center gap-4">
                   <span className="text-gray-500 text-lg font-medium">
                     Showing {(currentPage - 1) * 8 + 1} to {Math.min(currentPage * 8, recommendedNews.length)} of {recommendedNews.length} results
@@ -179,6 +181,32 @@ export default function NewsPage() {
                 </div>
               </div>
             </div>
+          </section>
+
+          <section className="mt-20 w-full max-w-screen-lg mx-auto">
+            <Slider {...adsSliderSettings}>
+              <div className="flex justify-center items-center">
+                <AdsCard 
+                  title="Keajaiban Bawah Laut di Raja Ampat! 🐠" 
+                  description="Menyelamlah ke dalam surga bawah laut terbaik di dunia! Jelajahi terumbu karang, ikan warna-warni, dan keindahan laut yang memukau di Raja Ampat!" 
+                  image="/ra.png"
+                />
+              </div>
+              <div className="flex justify-center items-center">
+                <AdsCard 
+                  title="Petualangan Mistis di Kawah Ijen! 🔥" 
+                  description="Rasakan pengalaman mendaki unik dengan fenomena api biru di Kawah Ijen! Nikmati sunrise spektakuler dari puncak gunung berapi yang legendaris." 
+                  image="/ki.png"
+                />
+              </div>
+              <div className="flex justify-center items-center">
+                <AdsCard 
+                  title="Eksplorasi Alam di Desa Wisata Penglipuran! 🌿" 
+                  description="Nikmati kesejukan dan ketenangan di salah satu desa terbersih di dunia! Jelajahi budaya, arsitektur tradisional, dan keramahan penduduk lokal." 
+                  image="/bangli.png"
+                />
+              </div>
+            </Slider>
           </section>
         </>
       )}
