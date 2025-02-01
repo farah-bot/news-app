@@ -1,7 +1,10 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
+
+// Loading state for Suspense fallback
+const Loading = () => <div>Loading...</div>;
 
 const DetailPage = () => {
   const searchParams = useSearchParams();
@@ -12,7 +15,6 @@ const DetailPage = () => {
     if (link) {
       const fetchArticle = async () => {
         try {
-
           const response = await fetch(link);
           const data = await response.json();
           setArticle(data);
@@ -43,4 +45,12 @@ const DetailPage = () => {
   );
 };
 
-export default DetailPage;
+const SuspenseWrapper = () => {
+  return (
+    <Suspense fallback={<Loading />}>
+      <DetailPage />
+    </Suspense>
+  );
+};
+
+export default SuspenseWrapper;

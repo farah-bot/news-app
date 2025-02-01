@@ -144,11 +144,11 @@ export default function NewsPage() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-x-4 gap-y-32 mt-4">
               {currentRecommendedNews.length > 0 ? currentRecommendedNews.map((news) => (
                 <RecommendedNewsCard 
-                  key={news.link} 
-                  link={news.link} 
-                  title={news.title} 
-                  thumbnail={news.thumbnail} 
-                  pubDate={news.pubDate} 
+                  key={news.link}
+                  link={news.link}
+                  title={news.title}
+                  thumbnail={news.thumbnail}
+                  pubDate={news.pubDate}
                 />
               )) : <p>No recommended news available.</p>}
             </div>
