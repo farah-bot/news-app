@@ -19,6 +19,7 @@ interface RecommendedNews extends NewsArticle {
   title: string;
   description: string;
   thumbnail: string;
+  pubDate: string;
 }
 
 export type { NewsArticle, PopularNews, RecommendedNews };
