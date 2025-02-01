@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 
 const Header: React.FC = () => {
   const [isSticky, setIsSticky] = useState(false);
@@ -51,7 +52,13 @@ const Header: React.FC = () => {
     >
       <div className="flex items-center space-x-4">
         <Link href="/">
-          <img src={isSticky ? "/icon-white.svg" : "/icon.svg"} alt="Logo" className="w-10 h-10 cursor-pointer" />
+          <Image
+            src={isSticky ? "/icon-white.svg" : "/icon.svg"}
+            alt="Logo"
+            width={40}
+            height={40}
+            className="cursor-pointer"
+          />
         </Link>
         <Link href="/" className={`text-2xl font-bold ${isSticky ? 'text-white' : 'text-black'} dark:text-white`}>
           Berita Kini

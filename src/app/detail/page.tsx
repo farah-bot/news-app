@@ -2,8 +2,8 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
+import Image from "next/image";
 
-// Loading state for Suspense fallback
 const Loading = () => <div>Loading...</div>;
 
 const DetailPage = () => {
@@ -34,10 +34,12 @@ const DetailPage = () => {
   return (
     <div className="p-8">
       <h1 className="text-3xl font-semibold">{article.title}</h1>
-      <img
+      <Image
         src={article.thumbnail}
         alt={article.title}
-        className="w-full h-64 object-cover mt-4 rounded-md"
+        width={1000} 
+        height={500} 
+        className="object-cover mt-4 rounded-md"
       />
       <div className="mt-4 text-lg">{article.description}</div>
       <div className="text-sm text-gray-500 mt-2">{article.pubDate}</div>
