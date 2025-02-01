@@ -4,7 +4,7 @@ interface RecommendedNewsCardProps {
   link: string;
   title: string;
   thumbnail: string;
-  pubDate: string;
+  pubDate?: string;
 }
 
 export const RecommendedNewsCard: React.FC<RecommendedNewsCardProps> = ({
