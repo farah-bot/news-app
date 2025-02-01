@@ -2,6 +2,8 @@
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { FaHome } from 'react-icons/fa';
+import Link from 'next/link';
 
 interface NewsData {
   title: string;
@@ -74,8 +76,26 @@ const DetailPageContent = () => {
   }
 
   return (
-    <div className="flex gap-10 p-4 mt-20">
-      <div className="flex-1">
+    <div className="gap-10 p-4 mt-20 flex">
+      {/* Main content (News Data) */}
+      <div className="flex-1 pr-4">
+        <div className="mb-6">
+          <nav className="text-gray-600">
+            <ol className="flex items-center space-x-2">
+              <li className="flex items-center">
+                <Link href="/" passHref>
+                  <FaHome className="text-xl text-blue-500" />
+                </Link>
+                <span className="ml-2">Home</span>
+              </li>
+              <li className="flex items-center">
+                <span className="mx-2">/</span>
+                <span>{newsData.title}</span>
+              </li>
+            </ol>
+          </nav>
+        </div>
+
         <h1 className="text-4xl font-bold">{newsData.title}</h1>
 
         {newsData.pubDate && (
@@ -112,7 +132,7 @@ const DetailPageContent = () => {
           <form onSubmit={handleCommentSubmit} className="flex gap-4 items-start">
             <div className="flex-shrink-0">
               <Image
-                src="/ava.png" 
+                src="/ava.png"
                 alt="Avatar"
                 className="w-12 h-12 rounded-lg object-cover"
                 width={48}
