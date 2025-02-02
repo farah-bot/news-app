@@ -63,7 +63,7 @@ const DetailPageContent = () => {
     if (newComment.trim()) {
       const newCommentObj: Comment = {
         id: Date.now(),
-        author: 'Anonymous',
+        author: 'Sigma Boy',
         content: newComment.trim(),
         timestamp: new Date().toLocaleString(),
       };
