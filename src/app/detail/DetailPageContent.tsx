@@ -135,7 +135,7 @@ const DetailPageContent = () => {
               <Image
                 src="/ava.png"
                 alt="Avatar"
-                className="rounded-full object-cover"
+                className="rounded-lg object-cover"
                 width={48}
                 height={48}
               />
