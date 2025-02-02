@@ -77,9 +77,9 @@ const DetailPageContent = () => {
   }
 
   return (
-    <div className="gap-10 p-4 mt-20 flex">
-      {/* Main content (News Data) */}
-      <div className="flex-1 pr-4">
+    <div className="flex flex-col lg:flex-row gap-10 p-4 mt-20">
+      
+      <div className="flex-1 pr-0 lg:pr-4">
         <div className="mb-6">
           <nav className="text-gray-600">
             <ol className="flex items-center space-x-2">
@@ -97,19 +97,19 @@ const DetailPageContent = () => {
           </nav>
         </div>
 
-        <h1 className="text-4xl font-bold">{newsData.title}</h1>
+        <h1 className="text-3xl md:text-4xl font-bold">{newsData.title}</h1>
 
         {newsData.pubDate && (
-          <p className="text-sm text-gray-500 mt-6">{formatDate(newsData.pubDate)}</p>
+          <p className="text-sm text-gray-500 mt-4">{formatDate(newsData.pubDate)}</p>
         )}
 
         {newsData.category && (
           <p className="text-sm text-gray-500 mt-2">Category: {newsData.category}</p>
         )}
 
-        <div className="mt-10">
+        <div className="mt-6">
           {newsData.thumbnail ? (
-            <div className="relative w-[400px] h-[267px]">
+            <div className="relative w-full aspect-video">
               <Image
                 src={newsData.thumbnail}
                 alt={newsData.title || 'News Thumbnail'}
@@ -122,45 +122,46 @@ const DetailPageContent = () => {
           )}
         </div>
 
-        <div className="mt-4">{newsData.description}</div>
+        <div className="mt-4 text-base leading-relaxed">{newsData.description}</div>
 
         <section className="mt-8">
-          <h2 className="flex gap-4 self-start py-3 mb-10 text-2xl font-bold leading-snug text-black dark:text-white">
-            <div className="flex shrink-0 w-1 bg-sky-500 h-[34px] rounded-[200px]" />
+          <h2 className="flex gap-4 items-center py-3 mb-10 text-2xl font-bold text-black dark:text-white">
+            <div className="w-1 bg-sky-500 h-8 rounded-full" />
             Komentar
           </h2>
 
-          <form onSubmit={handleCommentSubmit} className="flex gap-4 items-start">
+          <form onSubmit={handleCommentSubmit} className="flex flex-col md:flex-row gap-4 items-start">
             <div className="flex-shrink-0">
               <Image
                 src="/ava.png"
                 alt="Avatar"
-                className="w-12 h-12 rounded-lg object-cover"
+                className="rounded-full object-cover"
                 width={48}
                 height={48}
               />
             </div>
 
-            <div className="flex-1">
+            <div className="flex-1 w-full">
               <textarea
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder="Apa yang ingin anda tanyakan?"
-                className="p-2 border rounded-md h-24 w-full"
+                className="p-2 border rounded-md w-full resize-none"
+                rows={4}
               />
               <button
                 type="submit"
-                className="self-start bg-sky-500 text-white px-4 py-2 rounded-md mt-2"
+                className="mt-2 bg-sky-500 text-white px-4 py-2 rounded-md"
               >
                 Kirim
               </button>
             </div>
           </form>
 
-          <div className="mt-6">
+          <div className="mt-6 space-y-4">
             {comments.length > 0 ? (
               comments.map((comment) => (
-                <div key={comment.id} className="border p-4 mt-4 rounded-md">
+                <div key={comment.id} className="border p-4 rounded-md">
                   <div className="flex justify-between">
                     <div className="font-medium">{comment.author}</div>
                     <div className="text-sm text-gray-400">{comment.timestamp}</div>
@@ -175,35 +176,38 @@ const DetailPageContent = () => {
         </section>
 
         <section className="mt-8">
-          <h2 className="flex gap-4 self-start py-3 text-2xl font-bold leading-snug text-black dark:text-white">
-            <div className="flex shrink-0 w-1 bg-sky-500 h-[34px] rounded-[200px]" />
-            Berita Terkait
-          </h2>
-          <div>
-            <div className="border p-4 mt-4">
+          <div className="flex items-center justify-between">
+            <h2 className="flex gap-4 items-center py-3 text-2xl font-bold text-black dark:text-white">
+              <div className="w-1 bg-sky-500 h-8 rounded-full" />
+              Berita Terkait
+            </h2>
+            <button className="px-4 py-2 bg-sky-500 text-white rounded-md">Lihat Semua</button>
+          </div>
+          <div className="space-y-4">
+            <div className="border p-4 rounded-md">
               <h3 className="font-medium">Berita Terkait 1</h3>
               <p className="text-sm">Deskripsi singkat berita terkait.</p>
             </div>
-            <div className="border p-4 mt-4">
+            <div className="border p-4 rounded-md">
               <h3 className="font-medium">Berita Terkait 2</h3>
               <p className="text-sm">Deskripsi singkat berita terkait.</p>
             </div>
-            <button className="mt-4 text-blue-500">Lihat Semua</button>
           </div>
         </section>
+
       </div>
 
-      <div className="w-[300px]">
-        <h2 className="flex gap-4 self-start py-3 text-2xl font-bold leading-snug text-black dark:text-white">
-          <div className="flex shrink-0 w-1 bg-sky-500 h-[34px] rounded-[200px]" />
+      <div className="w-full lg:w-[300px]">
+        <h2 className="flex gap-4 items-center py-3 text-2xl font-bold text-black dark:text-white">
+          <div className="w-1 bg-sky-500 h-8 rounded-full" />
           Berita Populer
         </h2>
         <div className="space-y-4">
-          <div className="border p-4">
+          <div className="border p-4 rounded-md">
             <h3 className="font-medium">Berita Populer 1</h3>
             <p className="text-sm">Deskripsi singkat berita populer.</p>
           </div>
-          <div className="border p-4">
+          <div className="border p-4 rounded-md">
             <h3 className="font-medium">Berita Populer 2</h3>
             <p className="text-sm">Deskripsi singkat berita populer.</p>
           </div>

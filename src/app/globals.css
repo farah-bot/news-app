@@ -53,3 +53,12 @@ body.dark {
     background-position: 100% 100%, 0 100%, 0 0, 100% 0;
   }
 }
+
+.slick-dots li button:before {
+  font-size: 10px; 
+  color: #0090FF;
+  gap: 5px;
+}
+.slick-dots li.slick-active button:before {
+  color: #b9bbc0;
+}

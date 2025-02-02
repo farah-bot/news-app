@@ -14,15 +14,15 @@ export default function NewsCard({
   thumbnail,
   pubDate }: NewsCardProps) {
 
-
   const formattedDate = formatDate(pubDate, true);
 
   return (
-    <article className={`flex flex-col lg:flex-row items-center gap-x-[154px] lg:gap-x-8`}>
+    <article className="flex flex-col lg:flex-row items-center gap-y-4 gap-x-[154px] lg:gap-x-20">
       <div className="flex flex-col flex-1">
         <h2 className="font-semibold leading-loose text-slate-600">Headline</h2>
+        <h3 className="mt-2 text-4xl font-bold leading-10 text-zinc-800 dark:text-white">{title}</h3> 
         {description && (
-          <p className="mt-4 text-4xl font-bold leading-10 text-zinc-800 dark:text-white ">{description}</p>
+          <p className="mt-2 text-lg text-gray-600 dark:text-gray-300">{description}</p> 
         )}
         <div className="flex gap-3.5 items-center self-start mt-4 text-sm font-medium leading-6">
           <span className="flex shrink-0 self-stretch my-auto w-3.5 h-3.5">
@@ -33,11 +33,10 @@ export default function NewsCard({
           <time className="text-gray-500 self-stretch my-auto">{formattedDate}</time> 
         </div>
 
-
         <Link
           href={`/detail?link=${encodeURIComponent(link)}&title=${encodeURIComponent(
             title
-          )}&thumbnail=${encodeURIComponent(thumbnail)}&description=${encodeURIComponent(description)}`} // Use the link provided for navigation
+          )}&thumbnail=${encodeURIComponent(thumbnail)}&description=${encodeURIComponent(description)}`} 
           className="flex gap-2 items-center self-start py-3 mt-4 font-medium text-sky-500 rounded-lg min-h-[48px]"
         >
           <span>Baca Selengkapnya</span>

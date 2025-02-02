@@ -106,9 +106,10 @@ export default function NewsPage() {
       </section>
 
       {loading ? (
-        <div className="flex justify-center items-center">
+        <div className="fixed inset-0 flex justify-center items-center bg-white dark:bg-gray-900">
           <div className="loader"></div>
         </div>
+
       ) : error ? (
         <div className="bg-red-100 text-red-600 p-4 rounded-md text-center">
           {error}
@@ -153,9 +154,11 @@ export default function NewsPage() {
                   description={news.description}
                 />
               )) : <p>No recommended news available.</p>}
-            </div>
+            </div>   
+              </section>
 
-            <div className="mt-10">
+              <section className="mt-10 w-full max-w-screen-lg mx-auto">
+                            <div className="mt-20">
               <div className="flex justify-between items-center mt-10 gap-5">
                 <div className="flex items-center gap-4">
                   <span className="text-gray-500 text-lg font-medium">
@@ -166,22 +169,22 @@ export default function NewsPage() {
                 <div className="flex gap-4">
                   <button
                     onClick={handlePrevPage}
-                    className="px-4 py-2 bg-blue-500 text-white rounded-md disabled:opacity-50"
+                    className="px-4 py-2 bg-sky-500 text-white rounded-md disabled:opacity-50"
                     disabled={currentPage === 1}
                   >
                     Previous
                   </button>
                   <button
                     onClick={handleNextPage}
-                    className="px-4 py-2 bg-blue-500 text-white rounded-md disabled:opacity-50"
+                    className="px-4 py-2 bg-sky-500 text-white rounded-md disabled:opacity-50"
                     disabled={currentPage === totalPages}
                   >
                     Next
                   </button>
                 </div>
               </div>
-            </div>
-          </section>
+                </div>
+                </section>
 
           <section className="mt-20 w-full max-w-screen-lg mx-auto">
             <Slider {...adsSliderSettings}>
